@@ -1,0 +1,24 @@
+integer a,b;
+
+procedure bye
+{
+    a := 55;
+};
+
+procedure hello
+integer a;
+{
+    a := 67;
+    print(a);
+    call bye;
+    print(a);
+};  
+
+{
+    a := 1;
+    print (a);
+    b := 2;
+    print (b);
+    call hello;
+    print(a);
+}

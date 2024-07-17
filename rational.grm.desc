@@ -1,0 +1,2206 @@
+
+state 0:
+
+	start : . blk 
+
+	RAT	shift 5
+
+	start	goto 116
+	blk	goto 4
+	dec	goto 3
+	vardec	goto 2
+	ratvardec	goto 1
+
+	.	reduce by rule 4
+
+
+state 1:
+
+	vardec : ratvardec . intvardec boolvardec 
+
+	INT	shift 7
+
+	intvardec	goto 6
+
+	.	reduce by rule 6
+
+
+state 2:
+
+	dec : vardec . procdec 
+
+	PROC	shift 10
+
+	procdec	goto 9
+	procdef	goto 8
+
+	.	reduce by rule 12
+
+
+state 3:
+
+	blk : dec . cmdseq 
+
+	LBRACE	shift 12
+
+	cmdseq	goto 11
+
+	.	error
+
+
+state 4:
+
+	start : blk .  (reduce by rule 0)
+
+
+
+	.	reduce by rule 0
+
+
+state 5:
+
+	ratvardec : RAT . varlist SEMI 
+
+	IDENTIFIER	shift 14
+
+	varlist	goto 13
+
+	.	error
+
+
+state 6:
+
+	vardec : ratvardec intvardec . boolvardec 
+
+	BOOL	shift 16
+
+	boolvardec	goto 15
+
+	.	reduce by rule 8
+
+
+state 7:
+
+	intvardec : INT . varlist SEMI 
+
+	IDENTIFIER	shift 14
+
+	varlist	goto 17
+
+	.	error
+
+
+state 8:
+
+	procdec : procdef . SEMI procdec 
+
+	SEMI	shift 18
+
+
+	.	error
+
+
+state 9:
+
+	dec : vardec procdec .  (reduce by rule 2)
+
+
+
+	.	reduce by rule 2
+
+
+state 10:
+
+	procdef : PROC . IDENTIFIER blk 
+
+	IDENTIFIER	shift 19
+
+
+	.	error
+
+
+state 11:
+
+	blk : dec cmdseq .  (reduce by rule 1)
+
+
+
+	.	reduce by rule 1
+
+
+state 12:
+
+	cmdseq : LBRACE . cmds RBRACE 
+
+	IDENTIFIER	shift 27
+	IF	shift 26
+	WHILE	shift 25
+	READ	shift 24
+	CALL	shift 23
+	PRINT	shift 22
+
+	cmd	goto 21
+	cmds	goto 20
+
+	.	reduce by rule 16
+
+
+state 13:
+
+	ratvardec : RAT varlist . SEMI 
+
+	SEMI	shift 28
+
+
+	.	error
+
+
+state 14:
+
+	varlist : IDENTIFIER .  (reduce by rule 10)
+	varlist : IDENTIFIER . COMMA varlist 
+
+	COMMA	shift 29
+
+
+	.	reduce by rule 10
+
+
+state 15:
+
+	vardec : ratvardec intvardec boolvardec .  (reduce by rule 3)
+
+
+
+	.	reduce by rule 3
+
+
+state 16:
+
+	boolvardec : BOOL . varlist SEMI 
+
+	IDENTIFIER	shift 14
+
+	varlist	goto 30
+
+	.	error
+
+
+state 17:
+
+	intvardec : INT varlist . SEMI 
+
+	SEMI	shift 31
+
+
+	.	error
+
+
+state 18:
+
+	procdec : procdef SEMI . procdec 
+
+	PROC	shift 10
+
+	procdec	goto 32
+	procdef	goto 8
+
+	.	reduce by rule 12
+
+
+state 19:
+
+	procdef : PROC IDENTIFIER . blk 
+
+	RAT	shift 5
+
+	blk	goto 33
+	dec	goto 3
+	vardec	goto 2
+	ratvardec	goto 1
+
+	.	reduce by rule 4
+
+
+state 20:
+
+	cmdseq : LBRACE cmds . RBRACE 
+
+	RBRACE	shift 34
+
+
+	.	error
+
+
+state 21:
+
+	cmds : cmd . SEMI cmds 
+
+	SEMI	shift 35
+
+
+	.	error
+
+
+state 22:
+
+	cmd : PRINT . LPAREN expr RPAREN 
+
+	LPAREN	shift 36
+
+
+	.	error
+
+
+state 23:
+
+	cmd : CALL . IDENTIFIER 
+
+	IDENTIFIER	shift 37
+
+
+	.	error
+
+
+state 24:
+
+	cmd : READ . LPAREN IDENTIFIER RPAREN 
+
+	LPAREN	shift 38
+
+
+	.	error
+
+
+state 25:
+
+	cmd : WHILE . expr DO cmdseq OD 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 39
+
+	.	error
+
+
+state 26:
+
+	cmd : IF . expr THEN cmdseq ELSE cmdseq FI 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 51
+
+	.	error
+
+
+state 27:
+
+	cmd : IDENTIFIER . ASSIGN expr 
+
+	ASSIGN	shift 52
+
+
+	.	error
+
+
+state 28:
+
+	ratvardec : RAT varlist SEMI .  (reduce by rule 5)
+
+
+
+	.	reduce by rule 5
+
+
+state 29:
+
+	varlist : IDENTIFIER COMMA . varlist 
+
+	IDENTIFIER	shift 14
+
+	varlist	goto 53
+
+	.	error
+
+
+state 30:
+
+	boolvardec : BOOL varlist . SEMI 
+
+	SEMI	shift 54
+
+
+	.	error
+
+
+state 31:
+
+	intvardec : INT varlist SEMI .  (reduce by rule 7)
+
+
+
+	.	reduce by rule 7
+
+
+state 32:
+
+	procdec : procdef SEMI procdec .  (reduce by rule 13)
+
+
+
+	.	reduce by rule 13
+
+
+state 33:
+
+	procdef : PROC IDENTIFIER blk .  (reduce by rule 14)
+
+
+
+	.	reduce by rule 14
+
+
+state 34:
+
+	cmdseq : LBRACE cmds RBRACE .  (reduce by rule 15)
+
+
+
+	.	reduce by rule 15
+
+
+state 35:
+
+	cmds : cmd SEMI . cmds 
+
+	IDENTIFIER	shift 27
+	IF	shift 26
+	WHILE	shift 25
+	READ	shift 24
+	CALL	shift 23
+	PRINT	shift 22
+
+	cmd	goto 21
+	cmds	goto 55
+
+	.	reduce by rule 16
+
+
+state 36:
+
+	cmd : PRINT LPAREN . expr RPAREN 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 56
+
+	.	error
+
+
+state 37:
+
+	cmd : CALL IDENTIFIER .  (reduce by rule 19)
+
+
+
+	.	reduce by rule 19
+
+
+state 38:
+
+	cmd : READ LPAREN . IDENTIFIER RPAREN 
+
+	IDENTIFIER	shift 57
+
+
+	.	error
+
+
+state 39:
+
+	cmd : WHILE expr . DO cmdseq OD 
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	DO	shift 75
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	error
+
+
+state 40:
+
+	expr : NEG . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 76
+
+	.	error
+
+
+state 41:
+
+	expr : FALSE .  (reduce by rule 48)
+
+
+
+	.	reduce by rule 48
+
+
+state 42:
+
+	expr : TRUE .  (reduce by rule 47)
+
+
+
+	.	reduce by rule 47
+
+
+state 43:
+
+	expr : NOT . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 77
+
+	.	error
+
+
+state 44:
+
+	expr : RATOF . LPAREN expr RPAREN 
+
+	LPAREN	shift 78
+
+
+	.	error
+
+
+state 45:
+
+	expr : MAKERAT . LPAREN expr COMMA expr RPAREN 
+
+	LPAREN	shift 79
+
+
+	.	error
+
+
+state 46:
+
+	expr : INVERSE . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 80
+
+	.	error
+
+
+state 47:
+
+	expr : LPAREN . expr RPAREN 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 81
+
+	.	error
+
+
+state 48:
+
+	expr : RATNUMERAL .  (reduce by rule 50)
+
+
+
+	.	reduce by rule 50
+
+
+state 49:
+
+	expr : IDENTIFIER .  (reduce by rule 51)
+
+
+
+	.	reduce by rule 51
+
+
+state 50:
+
+	expr : INTNUMERAL .  (reduce by rule 49)
+
+
+
+	.	reduce by rule 49
+
+
+state 51:
+
+	cmd : IF expr . THEN cmdseq ELSE cmdseq FI 
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	THEN	shift 82
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	error
+
+
+state 52:
+
+	cmd : IDENTIFIER ASSIGN . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 83
+
+	.	error
+
+
+state 53:
+
+	varlist : IDENTIFIER COMMA varlist .  (reduce by rule 11)
+
+
+
+	.	reduce by rule 11
+
+
+state 54:
+
+	boolvardec : BOOL varlist SEMI .  (reduce by rule 9)
+
+
+
+	.	reduce by rule 9
+
+
+state 55:
+
+	cmds : cmd SEMI cmds .  (reduce by rule 17)
+
+
+
+	.	reduce by rule 17
+
+
+state 56:
+
+	cmd : PRINT LPAREN expr . RPAREN 
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RPAREN	shift 84
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	error
+
+
+state 57:
+
+	cmd : READ LPAREN IDENTIFIER . RPAREN 
+
+	RPAREN	shift 85
+
+
+	.	error
+
+
+state 58:
+
+	expr : expr OR . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 86
+
+	.	error
+
+
+state 59:
+
+	expr : expr AND . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 87
+
+	.	error
+
+
+state 60:
+
+	expr : expr RDIV . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 88
+
+	.	error
+
+
+state 61:
+
+	expr : expr RTIMES . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 89
+
+	.	error
+
+
+state 62:
+
+	expr : expr RMINUS . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 90
+
+	.	error
+
+
+state 63:
+
+	expr : expr RPLUS . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 91
+
+	.	error
+
+
+state 64:
+
+	expr : expr MOD . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 92
+
+	.	error
+
+
+state 65:
+
+	expr : expr DIV . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 93
+
+	.	error
+
+
+state 66:
+
+	expr : expr TIMES . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 94
+
+	.	error
+
+
+state 67:
+
+	expr : expr MINUS . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 95
+
+	.	error
+
+
+state 68:
+
+	expr : expr PLUS . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 96
+
+	.	error
+
+
+state 69:
+
+	expr : expr GEQ . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 97
+
+	.	error
+
+
+state 70:
+
+	expr : expr GT . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 98
+
+	.	error
+
+
+state 71:
+
+	expr : expr EQ . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 99
+
+	.	error
+
+
+state 72:
+
+	expr : expr NEQ . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 100
+
+	.	error
+
+
+state 73:
+
+	expr : expr LEQ . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 101
+
+	.	error
+
+
+state 74:
+
+	expr : expr LT . expr 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 102
+
+	.	error
+
+
+state 75:
+
+	cmd : WHILE expr DO . cmdseq OD 
+
+	LBRACE	shift 12
+
+	cmdseq	goto 103
+
+	.	error
+
+
+state 76:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+	expr : NEG expr .  (reduce by rule 46)
+
+
+
+	.	reduce by rule 46
+
+
+state 77:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : NOT expr .  (reduce by rule 42)
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+
+
+	.	reduce by rule 42
+
+
+state 78:
+
+	expr : RATOF LPAREN . expr RPAREN 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 104
+
+	.	error
+
+
+state 79:
+
+	expr : MAKERAT LPAREN . expr COMMA expr RPAREN 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 105
+
+	.	error
+
+
+state 80:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : INVERSE expr .  (reduce by rule 34)
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+
+
+	.	reduce by rule 34
+
+
+state 81:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+	expr : LPAREN expr . RPAREN 
+
+	RPAREN	shift 106
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	error
+
+
+state 82:
+
+	cmd : IF expr THEN . cmdseq ELSE cmdseq FI 
+
+	LBRACE	shift 12
+
+	cmdseq	goto 107
+
+	.	error
+
+
+state 83:
+
+	cmd : IDENTIFIER ASSIGN expr .  (reduce by rule 18)
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	reduce by rule 18
+
+
+state 84:
+
+	cmd : PRINT LPAREN expr RPAREN .  (reduce by rule 21)
+
+
+
+	.	reduce by rule 21
+
+
+state 85:
+
+	cmd : READ LPAREN IDENTIFIER RPAREN .  (reduce by rule 20)
+
+
+
+	.	reduce by rule 20
+
+
+state 86:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+	expr : expr OR expr .  (reduce by rule 44)
+
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+
+
+	.	reduce by rule 44
+
+
+state 87:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr AND expr .  (reduce by rule 43)
+	expr : expr . OR expr 
+
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 43
+
+
+state 88:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr RDIV expr .  (reduce by rule 33)
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+
+
+	.	reduce by rule 33
+
+
+state 89:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr RTIMES expr .  (reduce by rule 32)
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+
+
+	.	reduce by rule 32
+
+
+state 90:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr RMINUS expr .  (reduce by rule 31)
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 31
+
+
+state 91:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr RPLUS expr .  (reduce by rule 30)
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 30
+
+
+state 92:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr MOD expr .  (reduce by rule 41)
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 41
+
+
+state 93:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr DIV expr .  (reduce by rule 40)
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 40
+
+
+state 94:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr TIMES expr .  (reduce by rule 39)
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 39
+
+
+state 95:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr MINUS expr .  (reduce by rule 38)
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 38
+
+
+state 96:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr PLUS expr .  (reduce by rule 37)
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 37
+
+
+state 97:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr GEQ expr .  (reduce by rule 29)
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 29
+
+
+state 98:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr GT expr .  (reduce by rule 28)
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 28
+
+
+state 99:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr EQ expr .  (reduce by rule 26)
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	LT	shift 74
+	LEQ	shift 73
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 26
+
+
+state 100:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr NEQ expr .  (reduce by rule 27)
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	LT	shift 74
+	LEQ	shift 73
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 27
+
+
+state 101:
+
+	expr : expr . LEQ expr 
+	expr : expr LEQ expr .  (reduce by rule 24)
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 24
+
+
+state 102:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr LT expr .  (reduce by rule 25)
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+
+
+	.	reduce by rule 25
+
+
+state 103:
+
+	cmd : WHILE expr DO cmdseq . OD 
+
+	OD	shift 108
+
+
+	.	error
+
+
+state 104:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : RATOF LPAREN expr . RPAREN 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RPAREN	shift 109
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	error
+
+
+state 105:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : MAKERAT LPAREN expr . COMMA expr RPAREN 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	COMMA	shift 110
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	error
+
+
+state 106:
+
+	expr : LPAREN expr RPAREN .  (reduce by rule 45)
+
+
+
+	.	reduce by rule 45
+
+
+state 107:
+
+	cmd : IF expr THEN cmdseq . ELSE cmdseq FI 
+
+	ELSE	shift 111
+
+
+	.	error
+
+
+state 108:
+
+	cmd : WHILE expr DO cmdseq OD .  (reduce by rule 23)
+
+
+
+	.	reduce by rule 23
+
+
+state 109:
+
+	expr : RATOF LPAREN expr RPAREN .  (reduce by rule 36)
+
+
+
+	.	reduce by rule 36
+
+
+state 110:
+
+	expr : MAKERAT LPAREN expr COMMA . expr RPAREN 
+
+	INTNUMERAL	shift 50
+	IDENTIFIER	shift 49
+	RATNUMERAL	shift 48
+	LPAREN	shift 47
+	INVERSE	shift 46
+	MAKERAT	shift 45
+	RATOF	shift 44
+	NOT	shift 43
+	TRUE	shift 42
+	FALSE	shift 41
+	NEG	shift 40
+
+	expr	goto 112
+
+	.	error
+
+
+state 111:
+
+	cmd : IF expr THEN cmdseq ELSE . cmdseq FI 
+
+	LBRACE	shift 12
+
+	cmdseq	goto 113
+
+	.	error
+
+
+state 112:
+
+	expr : expr . LEQ expr 
+	expr : expr . LT expr 
+	expr : expr . EQ expr 
+	expr : expr . NEQ expr 
+	expr : expr . GT expr 
+	expr : expr . GEQ expr 
+	expr : expr . RPLUS expr 
+	expr : expr . RMINUS expr 
+	expr : expr . RTIMES expr 
+	expr : expr . RDIV expr 
+	expr : MAKERAT LPAREN expr COMMA expr . RPAREN 
+	expr : expr . PLUS expr 
+	expr : expr . MINUS expr 
+	expr : expr . TIMES expr 
+	expr : expr . DIV expr 
+	expr : expr . MOD expr 
+	expr : expr . AND expr 
+	expr : expr . OR expr 
+
+	RPAREN	shift 114
+	LT	shift 74
+	LEQ	shift 73
+	NEQ	shift 72
+	EQ	shift 71
+	GT	shift 70
+	GEQ	shift 69
+	PLUS	shift 68
+	MINUS	shift 67
+	TIMES	shift 66
+	DIV	shift 65
+	MOD	shift 64
+	RPLUS	shift 63
+	RMINUS	shift 62
+	RTIMES	shift 61
+	RDIV	shift 60
+	AND	shift 59
+	OR	shift 58
+
+
+	.	error
+
+
+state 113:
+
+	cmd : IF expr THEN cmdseq ELSE cmdseq . FI 
+
+	FI	shift 115
+
+
+	.	error
+
+
+state 114:
+
+	expr : MAKERAT LPAREN expr COMMA expr RPAREN .  (reduce by rule 35)
+
+
+
+	.	reduce by rule 35
+
+
+state 115:
+
+	cmd : IF expr THEN cmdseq ELSE cmdseq FI .  (reduce by rule 22)
+
+
+
+	.	reduce by rule 22
+
+
+state 116:
+
+
+	EOF	accept
+
+
+	.	error
+
+309 of 737 action table entries left after compaction
+55 goto table entries

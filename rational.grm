@@ -1,0 +1,107 @@
+open DataTypes ;
+fun x (x) = x
+
+%%
+%name My
+
+%term INTNUMERAL of BigInt.bigint | IDENTIFIER of string | RATNUMERAL of Rational.rational |
+      LBRACE | RBRACE | LPAREN | RPAREN | EOF | 
+      IF | THEN | ELSE | FI | WHILE | DO | OD | 
+      SEMI | COMMA | INT | BOOL | RAT |
+      LT | LEQ | NEQ | EQ | GT | GEQ | 
+      PLUS | MINUS | TIMES | DIV | MOD | 
+      RPLUS | RMINUS | RTIMES | RDIV |  
+      INVERSE | MAKERAT | RATOF |
+      NOT | AND | OR | TRUE | FALSE | VAR | NEG | 
+      ASSIGN | READ | CALL | PRINT | PROC
+
+%nonterm start of AST | blk of BLK |
+         dec of DEC | vardec of VARDEC | varlist of string list |
+         ratvardec of (string list) * Type |
+         intvardec of (string list) * Type |
+         boolvardec of (string list) * Type |
+         procdec of PROCDEF list | procdef of PROCDEF |
+         cmdseq of CMD list | cmd of CMD | cmds of CMD list | 
+         expr of Type * Exp
+         
+%eop EOF
+%noshift EOF
+%pos int
+%verbose
+
+%left OR
+%left AND
+%left EQ NEQ
+%left GT GEQ LT LEQ
+%left PLUS MINUS 
+%left TIMES MOD DIV 
+%left RPLUS RMINUS 
+%left RTIMES RDIV 
+%right NOT NEG MAKERAT RATOF INVERSE
+%left LPAREN RPAREN 
+
+%%
+  start : blk (START(blk))
+  blk : dec cmdseq (BLK(dec,cmdseq))
+  dec : vardec procdec (DEC(vardec,procdec))
+
+  vardec : ratvardec intvardec boolvardec (Vardec(ratvardec,intvardec,boolvardec))
+  ratvardec : ([],rational)
+            | RAT varlist SEMI      ((varlist,rational))
+  intvardec : ([],bigint)
+            | INT varlist SEMI      ((varlist,bigint))
+  boolvardec : ([],Bool)
+            | BOOL varlist SEMI     ((varlist,Bool))
+  varlist : IDENTIFIER                  (([IDENTIFIER]))
+          | IDENTIFIER COMMA varlist    ((IDENTIFIER::varlist))
+  
+  procdec : (([]))
+          | procdef SEMI procdec       (procdef::procdec)
+  procdef : PROC IDENTIFIER blk        (Procdef(IDENTIFIER,blk))
+
+  cmdseq : LBRACE cmds RBRACE ((cmds))
+  cmds : (([]))
+       | cmd SEMI cmds ((cmd::cmds))
+  
+  cmd : IDENTIFIER ASSIGN expr              (ASSIGN(IDENTIFIER,#2 expr))
+      | CALL IDENTIFIER                     (CALL(IDENTIFIER))
+      | READ LPAREN IDENTIFIER RPAREN       (READ(IDENTIFIER))
+      | PRINT LPAREN expr RPAREN            (PRINT(#2 expr))
+      | IF expr THEN cmdseq ELSE cmdseq FI  (ITE(#2 expr,cmdseq1,cmdseq2))
+      | WHILE expr DO cmdseq OD             (WHILE(#2 expr,cmdseq))
+
+  expr: expr LEQ expr   (Bool , LEQ(#2 expr1 , #2 expr2))
+        | expr LT expr  (Bool , LT(#2 expr1 , #2 expr2))
+        | expr EQ expr  (Bool , EQ(#2 expr1 , #2 expr2))
+        | expr NEQ expr (Bool , NEQ(#2 expr1 , #2 expr2))
+        | expr GT expr  (Bool , GT(#2 expr1 , #2 expr2))
+        | expr GEQ expr (Bool , GEQ(#2 expr1 , #2 expr2))
+        
+        | expr RPLUS expr           ((rational , RPLUS(#2 expr1 , #2 expr2)))
+        | expr RMINUS expr          ((rational , RMINUS(#2 expr1 , #2 expr2)))
+        | expr RTIMES expr          ((rational , RTIMES(#2 expr1 , #2 expr2)))
+        | expr RDIV expr            ((rational , RDIV(#2 expr1 , #2 expr2)))
+        | INVERSE expr              ((rational , INV(#2 expr)))
+        | MAKERAT LPAREN expr COMMA expr RPAREN  ((rational , MAKE(#2 expr1 , #2 expr2)))
+        | RATOF LPAREN expr RPAREN               ((rational , RAT(#2 expr)))
+
+        | expr PLUS expr    ((bigint , PLUS(#2 expr1 , #2 expr2)))
+        | expr MINUS expr   ((bigint , MINUS(#2 expr1 , #2 expr2)))
+        | expr TIMES expr   ((bigint , TIMES(#2 expr1 , #2 expr2)))
+        | expr DIV expr     ((bigint , DIV(#2 expr1 , #2 expr2)))
+        | expr MOD expr     ((bigint , MOD(#2 expr1 , #2 expr2)))
+        
+        | NOT expr          ((Bool , NOT(#2 expr)))
+        | expr AND expr     ((Bool , AND(#2 expr1 , #2 expr2)))
+        | expr OR expr      ((Bool , OR(#2 expr1 , #2 expr2)))
+        
+        | LPAREN expr RPAREN ((expr))
+
+        | NEG expr ((#1 expr,NEG(#2 expr)))
+        
+        | TRUE  ((Bool,TT))
+        | FALSE ((Bool,FF))
+        
+        | INTNUMERAL ((bigint,Intnumeral(INTNUMERAL)))
+        | RATNUMERAL ((rational,Ratnumeral(RATNUMERAL)))
+        | IDENTIFIER ((Bool,Identifier(IDENTIFIER)))

@@ -1,0 +1,12 @@
+Library
+    structure My
+is
+    $/basis.cm 
+    $/ml-yacc-lib.cm 
+    $smlnj/compiler/compiler.cm
+    $/smlnj-lib.cm 
+    rational.sml
+    rational.lex         
+    types.sml
+    rational.grm        
+    ratparser.sml
